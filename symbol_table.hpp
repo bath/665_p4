@@ -24,11 +24,14 @@ class SemSymbol {
 	// and functions to get/set those fields
 	public: 
 		SemSymbol(char kind, IDNode* id);
-		IdToS() {
+		std::string IdToS()
+		{
 			return id->getName();
 		};
-		getKind() {
-			return kind; // b = bool, c == char, i == int, s == string, v == void
+		char getKind() {
+			return kind; 
+			// b = bool, c == char, i == int, s == string, v == void
+			// p sure there are more types -- deal with this later
 		}
 	private: 
 		char kind;
@@ -58,9 +61,11 @@ class ScopeTable {
 class SymbolTable{
 	public:
 		SymbolTable();
-		void addScope();
+		void addScope(ScopeTable *tab);
 		void dropScope();
 		bool lookUp(IDNode *id); //  -- ensure that what were calling exists & is defined
+		bool isInCurrentScopeAlready(IDNode *id);
+		bool isWrongType(IDNode * id);
 		//TODO: add functions to create a new ScopeTable
 		// when a new scope is entered, drop a ScopeTable
 		// when a scope is exited, etc. 

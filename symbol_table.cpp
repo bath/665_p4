@@ -3,10 +3,6 @@ namespace holeyc{
 
 ScopeTable::ScopeTable(){
 	symbols = new HashMap<std::string, SemSymbol *>(); // unsure how to deal with the hash map when adding or finding ?
-	// i think string is:
-		// int my_id;
-		// string == my_id
-		// then why does SemSymbol have a char kind and IDNode* id; ? what do we need the SemSymbol in the map for? vice versa
 }
 
 SymbolTable::SymbolTable(){
@@ -16,38 +12,40 @@ SymbolTable::SymbolTable(){
 	// entered into the front of the chain and upon exit the 
 	// latest scope table will be removed from the front of 
 	// the chain.
-	// define addScope() ?
-
-	// how to deal with popping things off from the chain?
-	// when does this occur?
 
 	scopeTableChain = new std::list<ScopeTable *>();
 }
 
-void SymbolTable::addScope(ScopeTable * tab){
-	// TODO
-	// push tab to front of scopeTableChain
+// push a new table into the scopeTableChain
+void SymbolTable::addScope(ScopeTable *tab){
 	this->scopeTableChain->push_front(tab);
 }
 
+// drop the current scopetable 
 void SymbolTable::dropScope(){
-	// TODO
+	// TODO : how to tell when we call dropScope();?
+		// need to identify when we are exiting a scope
+		// maybe at the end of every nameAnalysis() since they will be recursive?
 	this->scopeTableChain->pop_front();
-	// removing a scope when we get out of a scope
 }
 
-// within the current scope, returns whether or not the id is present
-bool ScopeTable::isPresent(IDNode *id){
-	// look at this-> symbols to see if the id is a match in the hashmap
-	// not sure what to do with the hashmap's string component? what is it there for?
-	this->symbols.find(id->getName(), id->getSym()); // something like this? search the hashmap for the id
+// within the current scope, is this id present?
+bool ScopeTable::isPresent(IDNode *id)
+{
+	// TODO : not sure if this is correct
+	bool isPresent = true;
+	if ((this->symbols->find(id->getName())) == this->symbols->end()) {
+		isPresent = false;
+	}
+	return isPresent;
 }
 
 // lookUp will check ALL open scopes for an identifier.
-// Use only for stmts and expressions -- why do we care about if an expression lookUp == true? does clay mean the vars within?
+// use only for stmt and exps, we are actually USING the values, so make sure they exist in the first place
 bool SymbolTable::lookUp(IDNode *id)
 {
-	// See if id has been declared in all open scopes 
+	// See if id has been declared in all open scopes
+	// TODO -- i think this is correct
 	bool isPresent = false;
 	for(auto scopeT : *scopeTableChain){
 		// scopeT is a ScopeTable
@@ -57,11 +55,10 @@ bool SymbolTable::lookUp(IDNode *id)
 }
 
 // isInCurrentScopeAlready will check the CURRENT scope for an identifier. If found, print error in nameAnalysis caller. 
-// Use only for decls
+// Use only for decls -- var and fn
 bool SymbolTable::isInCurrentScopeAlready(IDNode *id)
 {
-	// TODO
-	// See if id has been declared in all open scopes
+	// TODO -- i think this is correct
 	bool isPresent = false;
 	isPresent = this->currentScope()->isPresent(id);
 	return isPresent;
@@ -84,11 +81,8 @@ ScopeTable* SymbolTable::currentScope(){
 
 // addSymbol will insert a new symbol into the current scope
 void SymbolTable::addSymbol(SemSymbol *s){
-	// TODO -- is this correct?
-	this->currentScope()->symbols.insert(s->IdToS(), s); // what does string in hashMap do? i think its the name of the id
-	// is there some kind of fuckery going on with IDNode having a 
-	// SemSymbol as priv var and then SemSymbol having a IDNode as a priv var?
-	// why do we need to have a doubly linked nodeid and semsymbol?
+	// TODO -- i think this is correct
+	this->currentScope()->symbols.insert(s->IdToS(), s);
 }
 
 

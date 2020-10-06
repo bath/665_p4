@@ -1,0 +1,17 @@
+1) change main.cpp to stuff on piazza, talk with chris?
+2) types and error checking stuff ... need to read through project details more thoroughly
+    three main error types
+        More than one declaration of an identifier in a given scope	  -- isInCurrentScope & lookUp
+            when declaring an id, ensure it doesn't already exist
+        Use of an undeclared identifier	 -- isInCurrentScope & lookUp
+            when using an id, ensure that it does exist
+        Bad declaration type (variable or parameter of void type)
+            when declaring an id, ensure it has a proper type  
+                possible types: 
+                    int intptr bool boolptr char charptr
+                    void if else while return true false
+                    FROMCONSOLE TOCONSOLE NULLPTR
+                    varDecl:
+                        int, inptr, bool, boolptr, char, charptr
+                    fnDecl:
+                        int, inptr, bool, boolptr, char, charptr, void
