@@ -78,6 +78,7 @@ public:
 	IDNode(size_t lIn, size_t cIn, std::string nameIn)
 	: LValNode(lIn, cIn), name(nameIn){}
 	std::string getName(){ return name; }
+	SemSymbol* getSym() {return mySymbol; }
 	void unparse(std::ostream& out, int indent) override;
 	bool nameAnalysis(SymbolTable * symTab) override;
 private:

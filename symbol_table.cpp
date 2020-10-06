@@ -40,7 +40,7 @@ void SymbolTable::dropScope(){
 bool ScopeTable::isPresent(IDNode *id){
 	// look at this-> symbols to see if the id is a match in the hashmap
 	// not sure what to do with the hashmap's string component? what is it there for?
-	// this->symbols.search(id); // something like this? search the hashmap for the id
+	this->symbols.find(id->getName(), id->getSym()); // something like this? search the hashmap for the id
 }
 
 // lookUp will check ALL open scopes for an identifier.
@@ -84,7 +84,7 @@ ScopeTable* SymbolTable::currentScope(){
 
 // addSymbol will insert a new symbol into the current scope
 void SymbolTable::addSymbol(SemSymbol *s){
-	// TODO
+	// TODO -- is this correct?
 	this->currentScope()->symbols.insert(s->IdToS(), s); // what does string in hashMap do? i think its the name of the id
 	// is there some kind of fuckery going on with IDNode having a 
 	// SemSymbol as priv var and then SemSymbol having a IDNode as a priv var?
