@@ -22,6 +22,17 @@ class SemSymbol {
 	// each semantic symbol should track
 	// (i.e. the kind of the symbol (either a variable or function)
 	// and functions to get/set those fields
+	public: 
+		SemSymbol(char kind, IDNode* id);
+		IdToS() {
+			return id->getName();
+		};
+		getKind() {
+			return kind; // b = bool, c == char, i == int, s == string, v == void
+		}
+	private: 
+		char kind;
+		IDNode* id;
 };
 
 //A single scope. The symbol table is broken down into a 
@@ -33,6 +44,9 @@ class SemSymbol {
 class ScopeTable {
 	public:
 		ScopeTable();
+		bool isInCurrentScopeAlready(IDNode *id);
+		bool isWrongType(IDNode *id);
+		bool isPresent(IDNode *id);
 		//TODO: add functions for looking up symbols
 		// and/or returning information to indicate
 		// that the symbol does not exist within the
@@ -44,6 +58,9 @@ class ScopeTable {
 class SymbolTable{
 	public:
 		SymbolTable();
+		void addScope();
+		void dropScope();
+		bool lookUp(IDNode *id); //  -- ensure that what were calling exists & is defined
 		//TODO: add functions to create a new ScopeTable
 		// when a new scope is entered, drop a ScopeTable
 		// when a scope is exited, etc. 
