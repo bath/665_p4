@@ -54,7 +54,7 @@ bool VarDeclNode::nameAnalysis(SymbolTable *symTab) {
 		symTab->currentScope()->addSymbol(this->ID()->getName(),s);
 		nameAnalysisOk = true;
 	}
-	return nameAnalysisOk;
+	return nameAnalysisOk;	
 }
 
 bool FnDeclNode::nameAnalysis(SymbolTable *symTab){
@@ -105,6 +105,20 @@ bool FnDeclNode::nameAnalysis(SymbolTable *symTab){
 		symTab->currentScope()->addSymbol(this->ID()->getName(), s);
 		ScopeTable *newScope = new ScopeTable();
 		symTab->addScope(newScope);
+
+		// we don't need to check the myRetType, correct?
+
+		// go through the formals and body?
+		nameAnalysisOk = true;
+
+		for (auto formals : *myFormals) {
+			nameAnalysisOk = formals->nameAnalysis(symTab);
+		}
+
+		for (auto body : *myBody) {
+			nameAnalysisOk = body->nameAnalysis(symTab);
+		}
+
 	}
 	return nameAnalysisOk;
 }
@@ -116,35 +130,186 @@ bool WhileStmtNode::nameAnalysis(SymbolTable *symTab) {
 	return false;
 }
 
+bool ReturnStmtNode::nameAnalysis(SymbolTable *symTab) {
+	bool nameAnalysisIsOk = false;
+
+	nameAnalysisIsOk = this->myExp->nameAnalysis(symTab);
+
+	return nameAnalysisIsOk;
+}
+
+bool CallExpNode::nameAnalysis(SymbolTable *symTab) {
+	bool nameAnalysisIsOk = false;
+
+	nameAnalysisIsOk = this->myID->nameAnalysis(symTab);
+
+	for(auto args : *myArgs) {
+		nameAnalysisIsOk = args->nameAnalysis(symTab);
+	}
+
+	return nameAnalysisIsOk;
+}
+
+bool BinaryExpNode::nameAnalysis(SymbolTable *symTab) {
+	bool nameAnalysisIsOk = false;
+
+	nameAnalysisIsOk = this->myExp1->nameAnalysis(symTab);
+	nameAnalysisIsOk = this->myExp2->nameAnalysis(symTab);
+
+	return nameAnalysisIsOk;
+}
+
+bool PlusNode::nameAnalysis(SymbolTable *symTab) {
+	bool nameAnalysisIsOk = false;
+
+	// this isn't supposed to do anything?
+
+	return nameAnalysisIsOk;
+}
+
+bool MinusNode::nameAnalysis(SymbolTable *symTab)
+{
+	bool nameAnalysisIsOk = false;
+
+	// this isn't supposed to do anything?
+
+	return nameAnalysisIsOk;
+}
+
+bool TimesNode::nameAnalysis(SymbolTable *symTab)
+{
+	bool nameAnalysisIsOk = false;
+
+	// this isn't supposed to do anything?
+
+	return nameAnalysisIsOk;
+}
+
+bool DivideNode::nameAnalysis(SymbolTable *symTab)
+{
+	bool nameAnalysisIsOk = false;
+
+	// this isn't supposed to do anything?
+
+	return nameAnalysisIsOk;
+}
+
+bool AndNode::nameAnalysis(SymbolTable *symTab)
+{
+	bool nameAnalysisIsOk = false;
+
+	// this isn't supposed to do anything?
+
+	return nameAnalysisIsOk;
+}
+
+bool OrNode::nameAnalysis(SymbolTable *symTab) {
+	bool nameAnalysisIsOk = false;
+
+	// this isn't supposed to do anything?
+
+	return nameAnalysisIsOk;
+}
+
+bool EqualsNode::nameAnalysis(SymbolTable *symTab)
+{
+	bool nameAnalysisIsOk = false;
+
+	// this isn't supposed to do anything?
+
+	return nameAnalysisIsOk;
+}
+
+bool NotEqualsNode::nameAnalysis(SymbolTable *symTab)
+{
+	bool nameAnalysisIsOk = false;
+
+	// this isn't supposed to do anything?
+
+	return nameAnalysisIsOk;
+}
+
+bool LessNode::nameAnalysis(SymbolTable *symTab)
+{
+	bool nameAnalysisIsOk = false;
+
+	// this isn't supposed to do anything?
+
+	return nameAnalysisIsOk;
+}
+
+bool LessEqNode::nameAnalysis(SymbolTable *symTab)
+{
+	bool nameAnalysisIsOk = false;
+
+	// this isn't supposed to do anything?
+
+	return nameAnalysisIsOk;
+}
+
+bool GreaterNode::nameAnalysis(SymbolTable *symTab)
+{
+	bool nameAnalysisIsOk = false;
+
+	// this isn't supposed to do anything?
+
+	return nameAnalysisIsOk;
+}
+
+bool GreaterEqNode::nameAnalysis(SymbolTable *symTab)
+{
+	bool nameAnalysisIsOk = false;
+
+	// this isn't supposed to do anything?
+
+	return nameAnalysisIsOk;
+}
+
+bool UnaryExpNode::nameAnalysis(SymbolTable *symTab)
+{
+	bool nameAnalysisIsOk = false;
+
+	nameAnalysisIsOk = this->myExp->nameAnalysis(symTab);
+
+	return nameAnalysisIsOk;
+}
+
 bool IfStmtNode::nameAnalysis(SymbolTable *symTab) {
+	bool nameAnalysisIsOk = false;
+
+	nameAnalysisIsOk = this->myCond->nameAnalysis(symTab);
+
+	for (auto body : *myBody) {
+		nameAnalysisIsOk = body->nameAnalysis(symTab);
+	}
 
 	// check the cond? ... i dont think so?
 	// check the body? ... yes ... but do we do that in this defn or in stmt node?
-	return false;	
+	return nameAnalysisIsOk;	
 }
 
-bool ReturnStmtNode::nameAnalysis(SymbolTable *symTab) {
-
-	// how to check myExp?
-	return false;
-}
 
 bool StmtNode::nameAnalysis(SymbolTable *symTab) {
+	// what do we do in parent nodes?
 	return false;
 }
 
 bool AssignExpNode::nameAnalysis(SymbolTable *symTab)
 {
-	// check myDst 
-	// check mySrc 
-	// you're either declaring or you're checking a Semsymbol?
+	bool nameAnalysisOk = false;
+	nameAnalysisOk = this->myDst->nameAnalysis(symTab);
+	nameAnalysisOk = this->mySrc->nameAnalysis(symTab);
 
-	// if(symTab->lookUp(getDST()->)){} /// how do i lookup an lval node?!?!? how do i give lookup a NodeID?
-	return false;
+	return nameAnalysisOk;
 }
 
 bool LValNode::nameAnalysis(SymbolTable *symTab) {
 	// are we supposed to do anything here?
+
+	// yes.. ?
+
+	// what / how do we call in here?
+
 	return false;
 }
 
@@ -179,4 +344,8 @@ bool FormalDeclNode::nameAnalysis(SymbolTable *symTab) {
 	return nameAnalysisOk;
 }
 
+bool 
+
+
 } // end name definitions
+
