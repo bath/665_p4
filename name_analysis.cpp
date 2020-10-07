@@ -33,7 +33,7 @@ bool ProgramNode::nameAnalysis(SymbolTable * symTab){
 
 bool VarDeclNode::nameAnalysis(SymbolTable *symTab) {
 	bool nameAnalysisOk = false;
-	if( (symTab->isInCurrentScopeAlready(this->ID())) && (!symTab->isCorrectType(this->getTypeNode(), 'v')) ) { // if both errors
+	if( (symTab->isInCurrentScopeAlready(this->ID())) && (!symTab->isCorrectType(this->getTypeNode()))) { // if both errors
 		Report myReport;
 		myReport.fatal(this->ID()->line(), this->ID()->col(), "Bad declaration type (variable or parameter of void type)");
 		myReport.fatal(this->ID()->line(), this->ID()->col(), "More than one declaration of an identifier in a given scope");
@@ -44,7 +44,7 @@ bool VarDeclNode::nameAnalysis(SymbolTable *symTab) {
 		myReport.fatal(this->ID()->line(), this->ID()->col(), "More than one declaration of an identifier in a given scope");
 		nameAnalysisOk = false;
 	}
-	else if(!symTab->isCorrectType(this->getTypeNode(), 'v')) {
+	else if(!symTab->isCorrectType(this->getTypeNode())) {
 		Report myReport;
 		myReport.fatal(this->ID()->line(), this->ID()->col(), "Bad declaration type (variable or parameter of void type)");
 		nameAnalysisOk = false;
@@ -137,7 +137,7 @@ bool AssignExpNode::nameAnalysis(SymbolTable *symTab) {
 	// check mySrc 
 	// you're either declaring or you're checking a Semsymbol?
 
-
+	if(symTab->lookUp(getDST()->)){} /// how do i lookup an lval node?!?!? how do i give lookup a NodeID?
 
 }
 
@@ -158,21 +158,17 @@ bool FormalDeclNode::nameAnalysis(SymbolTable *symTab) {
 		myReport.fatal(this->ID()->line(), this->ID()->col(), "More than one declaration of an identifier in a given scope");
 		nameAnalysisOk = false;
 	}
-	else if (symTab->isInCurrentScopeAlready(this->ID()))
-	{ // CCC
+	else if (symTab->isInCurrentScopeAlready(this->ID())) { // CCC
 		Report myReport;
 		myReport.fatal(this->ID()->line(), this->ID()->col(), "More than one declaration of an identifier in a given scope");
 		nameAnalysisOk = false;
 	}
-	else if (!symTab->isCorrectType(this->getTypeNode()
-	))
-	{
+	else if (!symTab->isCorrectType(this->getTypeNode())) {
 		Report myReport;
 		myReport.fatal(this->ID()->line(), this->ID()->col(), "Bad declaration type (variable or parameter of void type)");
 		nameAnalysisOk = false;
 	}
-	else
-	{
+	else {
 		SemSymbol *s = new SemSymbol('v', this->getTypeNode()->getType(), this->ID());
 		symTab->currentScope()->addSymbol(this->ID()->getName(), s);
 		nameAnalysisOk = true;
