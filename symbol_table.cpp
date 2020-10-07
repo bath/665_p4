@@ -66,42 +66,15 @@ bool SymbolTable::isInCurrentScopeAlready(IDNode *id)
 	return isPresent;
 }
 
-bool SymbolTable::isCorrectType(TypeNode *typeNode, char declType) {
+bool SymbolTable::isCorrectType(TypeNode *typeNode) {
 	// each type node will tell me what type it is with getType
 	// but we also need to see if its a var or func.. so pass it the ??
 	bool isCorrectType = false;
-	if(declType == 'v') {
-		if ((typeNode->getType() == "int") || (typeNode->getType() == "bool") || (typeNode->getType() == "char")){
-			isCorrectType = true;
-			return isCorrectType;
-		}
-		else if((typeNode->getType() == "intptr") || (typeNode->getType() == "boolptr") || (typeNode->getType() == "charptr")) {
-			isCorrectType = true;
-			return isCorrectType;
-		}
-		else {
-			return isCorrectType;
-		}
-	}
-	else if(declType == 'f'){
-		if ((typeNode->getType() == "int") || (typeNode->getType() == "bool") || (typeNode->getType() == "char") || (typeNode->getType() == "void"))
-		{
-			isCorrectType = true;
-			return isCorrectType;
-		}
-		else if ((typeNode->getType() == "intptr") || (typeNode->getType() == "boolptr") || (typeNode->getType() == "charptr"))
-		{
-			isCorrectType = true;
-			return isCorrectType;
-		}
-		else
-		{
-			return isCorrectType;
-		}
-	}
-	else {
+	if (!(typeNode->getType() == "void")){
+		isCorrectType = true;
 		return isCorrectType;
 	}
+	return isCorrectType;
 }
 
 bool SymbolTable::isFnWrongType(IDNode *id) { // should there be a version for fn decl and var decl? since var decl can't be void?

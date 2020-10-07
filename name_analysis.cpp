@@ -135,10 +135,14 @@ bool StmtNode::nameAnalysis(SymbolTable *symTab) {
 bool AssignExpNode::nameAnalysis(SymbolTable *symTab) {
 	// check myDst 
 	// check mySrc 
+	// you're either declaring or you're checking a Semsymbol?
+
+	
+
 }
 
 bool LValNode::nameAnalysis(SymbolTable *symTab) {
-
+	// are we supposed to do anything here?
 }
 
 bool FormalDeclNode::nameAnalysis(SymbolTable *symTab) {

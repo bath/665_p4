@@ -132,7 +132,7 @@ public:
 	: TypeNode(lIn, cIn), isPtr(isPtrIn){}
 	void unparse(std::ostream& out, int indent) override;
 	bool nameAnalysis(SymbolTable * symTab) override;
-	string getType(){
+	std::string getType() override {
 		if(isPtr) {
 			return "charptr";
 		}
@@ -167,7 +167,7 @@ public:
 	: DeclNode(lIn, cIn), myType(typeIn), myID(IDIn){ }
 	void unparse(std::ostream& out, int indent) override;
 	IDNode * ID(){ return myID; }
-	TypeNode * getTypeNode(){ return myType; }
+	TypeNode * getTypeNode() override { return myType; }
 	virtual bool nameAnalysis(SymbolTable *) override;
 private:
 	TypeNode * myType;
@@ -192,7 +192,7 @@ public:
 	  myID(idIn), myRetType(retTypeIn),
 	  myFormals(formalsIn), myBody(bodyIn){ }
 	IDNode * ID() const { return myID; }
-	TypeNode * getTypeNode() { return myRetType; }
+	TypeNode * getTypeNode() override { return myRetType; }
 	std::list<FormalDeclNode *> * getFormals() const{
 		return myFormals;
 	}
@@ -457,7 +457,7 @@ public:
 	VoidTypeNode(size_t l, size_t c) : TypeNode(l, c){}
 	void unparse(std::ostream& out, int indent) override;
 	bool nameAnalysis(SymbolTable * symTab) override;
-	std::string getType() {
+	std::string getType() override {
 		return "void";
 	}
 };
@@ -467,7 +467,7 @@ public:
 	IntTypeNode(size_t l, size_t c, bool ptrIn): TypeNode(l, c), isPtr(ptrIn){}
 	void unparse(std::ostream& out, int indent) override;
 	bool nameAnalysis(SymbolTable * symTab) override;
-	std::string getType(){
+	std::string getType() override {
 		if(isPtr) {
 			return "intptr";
 		}
@@ -484,7 +484,7 @@ public:
 	BoolTypeNode(size_t l, size_t c, bool ptrIn): TypeNode(l, c), isPtr(ptrIn) { }
 	void unparse(std::ostream& out, int indent) override;
 	bool nameAnalysis(SymbolTable * symTab) override;
-	std::string getType(){
+	std::string getType() override {
 		if(isPtr) {
 			return "boolptr";
 		}
