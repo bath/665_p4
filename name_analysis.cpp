@@ -8,16 +8,11 @@ namespace holeyc{
 // you should add the rest to allow for a complete treatment
 // of any AST
 
+// should be 4 instances of creating new scopes
+
 bool ASTNode::nameAnalysis(SymbolTable * symTab){
-	// astnode nameAnalysis decl has no param name, is this going to be a problem in compile time?
-
-	// WTF does this function do?
-
-	// we want to create a new symbolTable?
-	// for every { we access the scopeTableChain and add something to symbols
-	// not sure what would go here b/c idk what this node do?
-	// should we push new scope onto the symTab? addScope()?
-	return false;
+	throw new ToDoError("This function should have"
+		"been overriden in the subclass!");
 }
 
 bool ProgramNode::nameAnalysis(SymbolTable * symTab){
@@ -97,37 +92,59 @@ bool FnDeclNode::nameAnalysis(SymbolTable *symTab){
 		myReport.fatal(this->ID()->line(), this->ID()->col(), "More than one declaration of an identifier in a given scope");
 		nameAnalysisOk = false;
 
-		// even if this fails, we should still process the formals and body.. right here though? where??
-
-	}
-	else {
-		SemSymbol *s = new SemSymbol('f', this->getTypeNode()->getType(), this->ID());
-		symTab->currentScope()->addSymbol(this->ID()->getName(), s);
 		ScopeTable *newScope = new ScopeTable();
 		symTab->addScope(newScope);
 
-		// we don't need to check the myRetType, correct?
-
-		// go through the formals and body?
-		nameAnalysisOk = true;
-
-		for (auto formals : *myFormals) {
+		for (auto formals : *myFormals)
+		{
 			nameAnalysisOk = formals->nameAnalysis(symTab);
 		}
 
-		for (auto body : *myBody) {
+		for (auto body : *myBody)
+		{
+			nameAnalysisOk = body->nameAnalysis(symTab);
+		}
+	}
+	else { // is a valid function declaration
+		
+		// add function id to scope
+		SemSymbol *s = new SemSymbol('f', this);
+		symTab->currentScope()->addSymbol(this->ID()->getName(), s);
+
+		// create new scope for formals and body
+		ScopeTable *newScope = new ScopeTable();
+		symTab->addScope(newScope);
+
+		nameAnalysisOk = true;
+
+		for (auto formals : *myFormals)
+		{
+			nameAnalysisOk = formals->nameAnalysis(symTab);
+		}
+
+		for (auto body : *myBody)
+		{
 			nameAnalysisOk = body->nameAnalysis(symTab);
 		}
 
+		symTab->dropScope();
 	}
 	return nameAnalysisOk;
 }
 
 bool WhileStmtNode::nameAnalysis(SymbolTable *symTab) {
+	bool one,two;
+	one = this->myCond->nameAnalysis(symTab);
+	for(auto body : *myBody) {
+		two = body->nameAnalysis(symTab);
+	}
 
-	// check the cond? ... i dont think so?
-	// check the body? ... yes ... but do we do that in this defn or in stmt node?
-	return false;
+	// entering a new scope with our while statement
+	ScopeTable *newScope = new ScopeTable();
+	symTab->addScope(newScope);
+	symTab->dropScope();
+	return (one && two);
+
 }
 
 bool ReturnStmtNode::nameAnalysis(SymbolTable *symTab) {
@@ -150,21 +167,12 @@ bool CallExpNode::nameAnalysis(SymbolTable *symTab) {
 	return nameAnalysisIsOk;
 }
 
-bool BinaryExpNode::nameAnalysis(SymbolTable *symTab) {
-	bool nameAnalysisIsOk = false;
-
-	nameAnalysisIsOk = this->myExp1->nameAnalysis(symTab);
-	nameAnalysisIsOk = this->myExp2->nameAnalysis(symTab);
-
-	return nameAnalysisIsOk;
-}
-
 bool PlusNode::nameAnalysis(SymbolTable *symTab) {
 	bool nameAnalysisIsOk = false;
-
-	// this isn't supposed to do anything?
-
-	return nameAnalysisIsOk;
+	bool one,two;
+	one = this->myExp1->nameAnalysis(symTab);
+	two = this->myExp2->nameAnalysis(symTab);
+	return (one && two);
 }
 
 bool MinusNode::nameAnalysis(SymbolTable *symTab)
@@ -296,21 +304,11 @@ bool StmtNode::nameAnalysis(SymbolTable *symTab) {
 
 bool AssignExpNode::nameAnalysis(SymbolTable *symTab)
 {
-	bool nameAnalysisOk = false;
-	nameAnalysisOk = this->myDst->nameAnalysis(symTab);
-	nameAnalysisOk = this->mySrc->nameAnalysis(symTab);
+	bool one,two;
+	one = this->myDst->nameAnalysis(symTab);
+	two = this->mySrc->nameAnalysis(symTab);
 
-	return nameAnalysisOk;
-}
-
-bool LValNode::nameAnalysis(SymbolTable *symTab) {
-	// are we supposed to do anything here?
-
-	// yes.. ?
-
-	// what / how do we call in here?
-
-	return false;
+	return (one && two);
 }
 
 bool FormalDeclNode::nameAnalysis(SymbolTable *symTab) {
@@ -337,7 +335,7 @@ bool FormalDeclNode::nameAnalysis(SymbolTable *symTab) {
 		nameAnalysisOk = false;
 	}
 	else {
-		SemSymbol *s = new SemSymbol('v', this->getTypeNode()->getType(), this->ID());
+		SemSymbol *s = new SemSymbol('v', this);
 		symTab->currentScope()->addSymbol(this->ID()->getName(), s);
 		nameAnalysisOk = true;
 	}

@@ -32,17 +32,32 @@ class SemSymbol {
 			// clay had put in IDNode, do we need this? removing for now
 
 	public: 
-		SemSymbol(char k, string t, IDNode* i) : kind(k), type(t), id(i){};
+		SemSymbol(char k, DeclNode* d) : kind(k), declNode(d){};
 		char getKind()
 		{
 			return kind;
 			// f or v
 		}
-		std::string getType() { return type; }
+		std::string getType() { 
+			if(kind == 'v'){ // Is a Variable
+				return declNode->getTypeNode()->getType();
+			} else { // Is a Fn
+				std::string t = "";
+				int count = 0; 
+				for(auto f : declNode->getFormals()){
+					t += f->getTypeNode()->getType();
+					if(count < declNode->getFormals()->size()){
+						t += ",";
+					}
+				}
+				t += "->";
+				t += declNode->getTypeNode()->getType();
+				return t;
+			}
+		}
 	private: 
 		char kind;
-		std::string type;
-		IDNode* id;
+		DeclNode* declNode;
 };
 
 //A single scope. The symbol table is broken down into a 

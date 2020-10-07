@@ -62,7 +62,7 @@ public:
 	ExpNode(size_t lIn, size_t cIn) : ASTNode(lIn, cIn){ }
 	virtual void unparseNested(std::ostream& out);
 	virtual void unparse(std::ostream& out, int indent) override = 0;
-	bool nameAnalysis(SymbolTable * symTab) override;
+	virtual bool nameAnalysis(SymbolTable * symTab) override;
 };
 
 class LValNode : public ExpNode{
@@ -122,7 +122,7 @@ class TypeNode : public ASTNode{
 public:
 	TypeNode(size_t l, size_t c) : ASTNode(l, c){ }
 	void unparse(std::ostream&, int) override = 0;
-	bool nameAnalysis(SymbolTable * symTab) override;
+	virtual bool nameAnalysis(SymbolTable * symTab) override;
 	virtual std::string getType(); // do we need override = 0; here?
 };
 
@@ -150,15 +150,17 @@ class StmtNode : public ASTNode{
 public:
 	StmtNode(size_t lIn, size_t cIn) : ASTNode(lIn, cIn){ }
 	virtual void unparse(std::ostream& out, int indent) override = 0;
-	bool nameAnalysis(SymbolTable * symTab) override = 0;
+	virtual bool nameAnalysis(SymbolTable * symTab) override = 0;
 };
 
 class DeclNode : public StmtNode{
 public:
 	DeclNode(size_t l, size_t c) : StmtNode(l, c){ }
 	void unparse(std::ostream& out, int indent) override = 0;
-	bool nameAnalysis(SymbolTable *symTab) override = 0; // If unparse is override = 0, then so should nameAnalysis
+	virtual bool nameAnalysis(SymbolTable *symTab) override = 0; // If unparse is override = 0, then so should nameAnalysis
 	virtual TypeNode* getTypeNode();		 // do i need override = 0? what does it do?
+	virtual IDNode* ID();
+	virtual 
 };
 
 class VarDeclNode : public DeclNode{
@@ -166,9 +168,10 @@ public:
 	VarDeclNode(size_t lIn, size_t cIn, TypeNode * typeIn, IDNode * IDIn)
 	: DeclNode(lIn, cIn), myType(typeIn), myID(IDIn){ }
 	void unparse(std::ostream& out, int indent) override;
-	IDNode * ID(){ return myID; }
+	IDNode *ID() override { return myID; }
 	TypeNode * getTypeNode() override { return myType; }
 	virtual bool nameAnalysis(SymbolTable *) override;
+	virtual std::list<FormalDeclNode *> * getFormals();
 private:
 	TypeNode * myType;
 	IDNode * myID;
@@ -191,7 +194,7 @@ public:
 	: DeclNode(lIn, cIn), 
 	  myID(idIn), myRetType(retTypeIn),
 	  myFormals(formalsIn), myBody(bodyIn){ }
-	IDNode * ID() const { return myID; }
+	IDNode * ID() override { return myID; }
 	TypeNode * getTypeNode() override { return myRetType; }
 	std::list<FormalDeclNode *> * getFormals() const{
 		return myFormals;
@@ -320,7 +323,7 @@ class BinaryExpNode : public ExpNode{
 public:
 	BinaryExpNode(size_t lIn, size_t cIn, ExpNode * lhs, ExpNode * rhs)
 	: ExpNode(lIn, cIn), myExp1(lhs), myExp2(rhs) { }
-	bool nameAnalysis(SymbolTable * symTab) override;
+	virtual bool nameAnalysis(SymbolTable * symTab) override;
 protected:
 	ExpNode * myExp1;
 	ExpNode * myExp2;
@@ -431,7 +434,7 @@ public:
 		this->myExp = expIn;
 	}
 	virtual void unparse(std::ostream& out, int indent) override = 0;
-	bool nameAnalysis(SymbolTable * symTab) override;
+	virtual bool nameAnalysis(SymbolTable * symTab) override;
 protected:
 	ExpNode * myExp;
 };
@@ -501,7 +504,7 @@ public:
 	AssignExpNode(size_t l, size_t c, LValNode * dstIn, ExpNode * srcIn)
 	: ExpNode(l, c), myDst(dstIn), mySrc(srcIn){ }
 	void unparse(std::ostream& out, int indent) override;
-	bool nameAnalysis(SymbolTable * symTab) override;
+	virtual bool nameAnalysis(SymbolTable * symTab) override;
 	LValNode* getDST() { return myDst; }
 	ExpNode * getSRC() { return mySrc; }
 private:

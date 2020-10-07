@@ -3,6 +3,8 @@
 
 namespace holeyc{
 
+	// will need to add small things
+
 static void doIndent(std::ostream& out, int indent){
 	for (int k = 0 ; k < indent; k++){ out << "\t"; }
 }
@@ -319,6 +321,17 @@ void LValNode::unparseNested(std::ostream& out){
 void IDNode::unparse(std::ostream& out, int indent){
 	doIndent(out, indent);
 	out << name;
+	// IDNode can be attached to a function or variable
+	// a = 3; 
+	// a();
+	//a[3];
+	// We have a SemSymbol * 
+	if (mySymbol)
+	{
+		out << "(";
+		out << mySymbol->myTypeToS(); // (int) OR (int,bool->int) -- MAKE SURE THIS WORKS
+		out << ")";
+	}
 }
 
 void IntLitNode::unparse(std::ostream& out, int indent){
