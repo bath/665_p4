@@ -3,6 +3,12 @@ namespace holeyc{
 
 ScopeTable::ScopeTable(){
 	symbols = new HashMap<std::string, SemSymbol *>(); // unsure how to deal with the hash map when adding or finding ?
+
+	// when doing find() on symbols, what does it compare? if a string is already present will it come back true?
+	// does the semsymbol spot have to be filled?
+	// with find, you input a string to search. if the string is in the hashmap, it returns the sem symbol
+		// otherwise, it returns past the hashmap length i.e. not found
+
 }
 
 SymbolTable::SymbolTable(){
@@ -14,6 +20,12 @@ SymbolTable::SymbolTable(){
 	// the chain.
 
 	scopeTableChain = new std::list<ScopeTable *>();
+}
+
+SemSymbol::SemSymbol(char k, string t, IDNode *i){
+	kind = k;
+	type = t;
+	id = i;
 }
 
 // push a new table into the scopeTableChain
@@ -32,10 +44,9 @@ void SymbolTable::dropScope(){
 // within the current scope, is this id present?
 bool ScopeTable::isPresent(IDNode *id)
 {
-	// TODO : not sure if this is correct
-	bool isPresent = true;
-	if ((this->symbols->find(id->getName())) == this->symbols->end()) {
-		isPresent = false;
+	bool isPresent = false;
+	if ((this->symbols->find(id->getName())) != this->symbols->end()) {
+		isPresent = true; // id is in scope
 	}
 	return isPresent;
 }
@@ -44,12 +55,9 @@ bool ScopeTable::isPresent(IDNode *id)
 // use only for stmt and exps, we are actually USING the values, so make sure they exist in the first place
 bool SymbolTable::lookUp(IDNode *id)
 {
-	// See if id has been declared in all open scopes
-	// TODO -- i think this is correct
 	bool isPresent = false;
 	for(auto scopeT : *scopeTableChain){
-		// scopeT is a ScopeTable
-		isPresent = scopeT->isPresent(id); // what happens when there are two instances?
+		isPresent = scopeT->isPresent(id);
 	}
 	return isPresent;
 }
@@ -64,25 +72,41 @@ bool SymbolTable::isInCurrentScopeAlready(IDNode *id)
 	return isPresent;
 }
 
-bool SymbolTable::isWrongType(IDNode *id) { // should there be a version for fn decl and var decl? since var decl can't be void?
+bool SymbolTable::isCorrectType() {
+	
+}
+
+bool SymbolTable::isFnWrongType(IDNode *id) { // should there be a version for fn decl and var decl? since var decl can't be void?
 	// TODO -- could be some type that isn't defined (i.e. asdf a;)
 
 	// check the type? var decl vs fndecl? how to do so?
-	bool isCorrect = true;
-	if(id->mySymbol->getKind() == "v"){
-		return false;
+	// id->mySymbol->getKind() == "v"
+	if (/* function type is not  int, inptr, bool, boolptr, char, charptr, void */)
+	{
+		return true;
 	}
-	return isCorrect;
+	return false;
 }
 
-ScopeTable* SymbolTable::currentScope(){
-	return this->scopeTableChain.front();
+bool SymbolTable::isVarWrongType(IDNode *id) { 
+	// not sure if we use an IDNode to check the varDecl type.. 
+	// would seem to me that we pass in something different? like the intnode type.. pass in a typenode?
+	if ( /* idnode type is not int, inptr, bool, boolptr, char, charptr */ ) {
+		return true;
+	}
+	// a valid type
+	return false;
+}
+
+ScopeTable* SymbolTable::currentScope()
+{
+	return this->scopeTableChain->front();
 }
 
 // addSymbol will insert a new symbol into the current scope
 void SymbolTable::addSymbol(SemSymbol *s){
 	// TODO -- i think this is correct
-	this->currentScope()->symbols.insert(s->IdToS(), s);
+	this->currentScope()->symbols->insert(s->IdToS(), s);
 }
 
 

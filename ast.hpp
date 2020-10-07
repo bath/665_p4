@@ -131,8 +131,17 @@ public:
 	: TypeNode(lIn, cIn), isPtr(isPtrIn){}
 	void unparse(std::ostream& out, int indent) override;
 	bool nameAnalysis(SymbolTable * symTab) override;
+	string getType(){
+		if(isPtr) {
+			return "charptr";
+		}
+		else {
+			return "char";
+		}
+	};
 private:
 	bool isPtr;
+	std::string nodeType;
 };
 
 
@@ -442,9 +451,10 @@ public:
 
 class VoidTypeNode : public TypeNode{
 public:
-	VoidTypeNode(size_t l, size_t c) : TypeNode(l, c){}
+	VoidTypeNode(size_t l, size_t c) : TypeNode(l, c), nodeType("void") {}
 	void unparse(std::ostream& out, int indent) override;
 	bool nameAnalysis(SymbolTable * symTab) override;
+	std::string nodeType;
 };
 
 class IntTypeNode : public TypeNode{
@@ -452,6 +462,14 @@ public:
 	IntTypeNode(size_t l, size_t c, bool ptrIn): TypeNode(l, c), isPtr(ptrIn){}
 	void unparse(std::ostream& out, int indent) override;
 	bool nameAnalysis(SymbolTable * symTab) override;
+	std::string getType(){
+		if(isPtr) {
+			return "intptr";
+		}
+		else {
+			return "int";
+		}
+	};
 private:
 	const bool isPtr;
 };
@@ -461,6 +479,14 @@ public:
 	BoolTypeNode(size_t l, size_t c, bool ptrIn): TypeNode(l, c), isPtr(ptrIn) { }
 	void unparse(std::ostream& out, int indent) override;
 	bool nameAnalysis(SymbolTable * symTab) override;
+	std::string getType(){
+		if(isPtr) {
+			return "boolptr";
+		}
+		else {
+			return "bool";
+		}
+	};
 private:
 	const bool isPtr;
 };

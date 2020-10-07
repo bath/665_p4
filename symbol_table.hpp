@@ -23,18 +23,19 @@ class SemSymbol {
 	// (i.e. the kind of the symbol (either a variable or function)
 	// and functions to get/set those fields
 	public: 
-		SemSymbol(char kind, IDNode* id);
+		SemSymbol(char k, string t, IDNode* i);
+		char getKind()
+		{
+			return kind;
+			// f or v
+		}
 		std::string IdToS()
 		{
 			return id->getName();
 		};
-		char getKind() {
-			return kind; 
-			// b = bool, c == char, i == int, s == string, v == void
-			// p sure there are more types -- deal with this later
-		}
 	private: 
 		char kind;
+		std::string type;
 		IDNode* id;
 };
 
@@ -48,7 +49,6 @@ class ScopeTable {
 	public:
 		ScopeTable();
 		bool isInCurrentScopeAlready(IDNode *id);
-		bool isWrongType(IDNode *id);
 		bool isPresent(IDNode *id);
 		//TODO: add functions for looking up symbols
 		// and/or returning information to indicate
@@ -63,9 +63,11 @@ class SymbolTable{
 		SymbolTable();
 		void addScope(ScopeTable *tab);
 		void dropScope();
+		ScopeTable* currentScope();
 		bool lookUp(IDNode *id); //  -- ensure that what were calling exists & is defined
 		bool isInCurrentScopeAlready(IDNode *id);
-		bool isWrongType(IDNode * id);
+		bool isFnWrongType(IDNode *id);
+		bool isVarWrongType(IDNode *id);
 		//TODO: add functions to create a new ScopeTable
 		// when a new scope is entered, drop a ScopeTable
 		// when a scope is exited, etc. 
