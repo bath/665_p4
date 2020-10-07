@@ -502,6 +502,8 @@ public:
 	: ExpNode(l, c), myDst(dstIn), mySrc(srcIn){ }
 	void unparse(std::ostream& out, int indent) override;
 	bool nameAnalysis(SymbolTable * symTab) override;
+	LValNode* getDST() { return myDst; }
+	ExpNode * getSRC() { return mySrc; }
 private:
 	LValNode * myDst;
 	ExpNode * mySrc;

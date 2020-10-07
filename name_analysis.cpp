@@ -137,7 +137,7 @@ bool AssignExpNode::nameAnalysis(SymbolTable *symTab) {
 	// check mySrc 
 	// you're either declaring or you're checking a Semsymbol?
 
-	
+
 
 }
 
@@ -151,7 +151,7 @@ bool FormalDeclNode::nameAnalysis(SymbolTable *symTab) {
 	// VarDeclNode, which does have them
 
 	bool nameAnalysisOk = false;
-	if ((symTab->isInCurrentScopeAlready(this->ID())) && (!symTab->isCorrectType(this->getTypeNode(), 'v')))
+	if ((symTab->isInCurrentScopeAlready(this->ID())) && (!symTab->isCorrectType(this->getTypeNode())))
 	{ // if both errors
 		Report myReport;
 		myReport.fatal(this->ID()->line(), this->ID()->col(), "Bad declaration type (variable or parameter of void type)");
@@ -164,7 +164,8 @@ bool FormalDeclNode::nameAnalysis(SymbolTable *symTab) {
 		myReport.fatal(this->ID()->line(), this->ID()->col(), "More than one declaration of an identifier in a given scope");
 		nameAnalysisOk = false;
 	}
-	else if (!symTab->isCorrectType(this->getTypeNode(), 'v'))
+	else if (!symTab->isCorrectType(this->getTypeNode()
+	))
 	{
 		Report myReport;
 		myReport.fatal(this->ID()->line(), this->ID()->col(), "Bad declaration type (variable or parameter of void type)");
