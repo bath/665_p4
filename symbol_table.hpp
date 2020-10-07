@@ -68,6 +68,7 @@ class SymbolTable{
 		bool isInCurrentScopeAlready(IDNode *id);
 		bool isFnWrongType(IDNode *id);
 		bool isVarWrongType(IDNode *id);
+		bool isCorrectType(TypeNode *typeNode, char declType);
 		//TODO: add functions to create a new ScopeTable
 		// when a new scope is entered, drop a ScopeTable
 		// when a scope is exited, etc. 

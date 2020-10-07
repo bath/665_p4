@@ -190,6 +190,7 @@ public:
 	  myID(idIn), myRetType(retTypeIn),
 	  myFormals(formalsIn), myBody(bodyIn){ }
 	IDNode * ID() const { return myID; }
+	TypeNode * getTypeNode() { return myRetType; }
 	std::list<FormalDeclNode *> * getFormals() const{
 		return myFormals;
 	}
@@ -451,10 +452,12 @@ public:
 
 class VoidTypeNode : public TypeNode{
 public:
-	VoidTypeNode(size_t l, size_t c) : TypeNode(l, c), nodeType("void") {}
+	VoidTypeNode(size_t l, size_t c) : TypeNode(l, c){}
 	void unparse(std::ostream& out, int indent) override;
 	bool nameAnalysis(SymbolTable * symTab) override;
-	std::string nodeType;
+	std::string getType() {
+		return "void";
+	}
 };
 
 class IntTypeNode : public TypeNode{

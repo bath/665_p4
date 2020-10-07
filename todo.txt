@@ -18,3 +18,42 @@
 3) when is mySymbol for IDNodes set? is it going to be defined? this could be a problem
     do we also need to check if the typenode is a pointer?
     const bool isPtr priv var for each typeNode
+
+Declaration Nodes
+    The only time we care about type checking is when an identifer is being declared for the first time
+    There three cases in which an identifier can be declared
+        1. Function Declaration Node
+        2. Variable Declaration Node
+        3. Formal Declaration Node (parameters of a function)
+    So... in each case, what are the member variables for each of those nodes?
+        1. Function Declaration Node
+            a. IDNode
+            b. TypeNode
+            c. list of formals
+            d. list of statement nodes
+        2. Variable Declaration Node
+            a. TypeNode
+            b. IDNode
+        3. Formal Declaration Node (parameters of a function)
+            a. Has nothing?
+                i. Will this be a problem?
+                        -- !! not sure, come back later
+    function and variable have in common: TypeNode and IDNode
+        IDNode will be useless to use because it doesn't have carry the type, just the id name
+        So, in isCorrectType(), we will want to pass a TypeNode to them
+            These TypeNodes are accessible through the parent's fnDecl and varDecl with a function I will have to define
+
+TypeNode   
+    When taking in a TypeNode, we can have a few possibilities:
+        1. VoidTypeNode
+        2. IntTypeNode
+        3. BoolTypeNode
+        4. CharTypeNode
+        
+
+
+
+Todos:
+1) figure out how to deal with formaldeclnode
+2) check to make sure my error spec is good
+3) figure out the mess that is mysymbol / adding new symbols to the hashmap

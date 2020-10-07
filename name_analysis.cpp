@@ -39,14 +39,13 @@ bool VarDeclNode::nameAnalysis(SymbolTable *symTab) {
 		// else valid
 	// TODO : not sure this function definition is correct
 	bool nameAnalysisOk = false;
-	// this == the current VarDeclNode
 	// current scope will return the current scope table?
-	if (symTab->isInCurrentScopeAlready(this->myID)){
+	if (symTab->isInCurrentScopeAlready(this->myID)){ // CCC
 		Report myReport;
 		myReport.fatal(this->myID->line(), this->myID->col(), "More than one declaration of an identifier in a given scope");
 		nameAnalysisOk = false;
 	}
-	else if(symTab->isVarWrongType(this->myID)) {
+	else if(symTab->isCorrectType(this->getTypeNode(), 'v')) {
 		Report myReport;
 		myReport.fatal(this->myID->line(), this->myID->col(), "Bad declaration type (variable or parameter of void type)");
 		nameAnalysisOk = false;
@@ -64,6 +63,13 @@ bool VarDeclNode::nameAnalysis(SymbolTable *symTab) {
 
 bool FnDeclNode::nameAnalysis(SymbolTable *symTab){
 	bool nameAnalysisOk = true;
+
+	// NOTE: 
+	// During name analysis, if a function name is multiply declared you should 
+	// still process the formals and the body of the function; don't add a new entry 
+	// to the current symbol table for the function, but do add a new hashtable to 
+	// the front of the SymTable's list for the names declared in the body (i.e., the 
+	// parameters and other local variables of the function).
 
 	// what types of errors can occur from a function declaration?
 		// no return type -- were not concerned about that right now i think?
