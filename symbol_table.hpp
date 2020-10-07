@@ -3,6 +3,7 @@
 #include <string>
 #include <unordered_map>
 #include <list>
+#include "ast.hpp"
 
 //Use an alias template so that we can use
 // "HashMap" and it means "std::unordered_map"

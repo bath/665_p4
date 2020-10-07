@@ -113,36 +113,39 @@ bool WhileStmtNode::nameAnalysis(SymbolTable *symTab) {
 
 	// check the cond? ... i dont think so?
 	// check the body? ... yes ... but do we do that in this defn or in stmt node?
-
+	return false;
 }
 
 bool IfStmtNode::nameAnalysis(SymbolTable *symTab) {
 
 	// check the cond? ... i dont think so?
 	// check the body? ... yes ... but do we do that in this defn or in stmt node?
+	return false;	
 }
 
 bool ReturnStmtNode::nameAnalysis(SymbolTable *symTab) {
 
 	// how to check myExp?
-
+	return false;
 }
 
 bool StmtNode::nameAnalysis(SymbolTable *symTab) {
-
+	return false;
 }
 
-bool AssignExpNode::nameAnalysis(SymbolTable *symTab) {
+bool AssignExpNode::nameAnalysis(SymbolTable *symTab)
+{
 	// check myDst 
 	// check mySrc 
 	// you're either declaring or you're checking a Semsymbol?
 
-	if(symTab->lookUp(getDST()->)){} /// how do i lookup an lval node?!?!? how do i give lookup a NodeID?
-
+	// if(symTab->lookUp(getDST()->)){} /// how do i lookup an lval node?!?!? how do i give lookup a NodeID?
+	return false;
 }
 
 bool LValNode::nameAnalysis(SymbolTable *symTab) {
 	// are we supposed to do anything here?
+	return false;
 }
 
 bool FormalDeclNode::nameAnalysis(SymbolTable *symTab) {

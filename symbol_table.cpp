@@ -77,28 +77,6 @@ bool SymbolTable::isCorrectType(TypeNode *typeNode) {
 	return isCorrectType;
 }
 
-bool SymbolTable::isFnWrongType(IDNode *id) { // should there be a version for fn decl and var decl? since var decl can't be void?
-	// TODO -- could be some type that isn't defined (i.e. asdf a;)
-
-	// check the type? var decl vs fndecl? how to do so?
-	// id->mySymbol->getKind() == "v"
-	if (/* function type is not  int, inptr, bool, boolptr, char, charptr, void */)
-	{
-		return true;
-	}
-	return false;
-}
-
-bool SymbolTable::isVarWrongType(IDNode *id) { 
-	// not sure if we use an IDNode to check the varDecl type.. 
-	// would seem to me that we pass in something different? like the intnode type.. pass in a typenode?
-	if ( /* idnode type is not int, inptr, bool, boolptr, char, charptr */ ) {
-		return true;
-	}
-	// a valid type
-	return false;
-}
-
 ScopeTable* SymbolTable::currentScope()
 {
 	return this->scopeTableChain->front();
@@ -107,14 +85,14 @@ ScopeTable* SymbolTable::currentScope()
 // addSymbol will insert a new symbol into the current scope
 void ScopeTable::addSymbol(string idName, SemSymbol *s){
 	// TODO -- i think this is correct
-	this->symbols->insert(idName, s);
+	this->symbols->insert(std::make_pair(idName, s));
 }
 
 
 
 
 
-
+} // end symbol_table
 
 
 
