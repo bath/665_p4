@@ -58,10 +58,20 @@ Todos:
 2) check to make sure my error spec is good
 3) figure out the mess that is mysymbol / adding new symbols to the hashmap
 4) will i need to track the scope for each symbol? how are we going to manage that?
+5) identifiy other nodes that will create new scopes
+6) think about how fndecl will work with its:
+    a. actuals
+    b. return type
+    c. stmt list?
+7) will an fndecl with random nodetype get caught in the scanner or will i have to make sure it is valid like vardecl?
+8) can you declare and/or define functions in functions?
+9) am i supposed to be putting in code somewhere that will actually kick off all nameAnalysis()? -- check where syntax stuff is kicked off, main.cpp?
+10) what is this throw todo error? did clay use that?
 
 In case of errors:
 1) will i need a virtual function for getType() in typenode? since all literal children have getType() ??
 2) when will we be using over ride = 0 and virtual?
+
 
 Questions:
 1) are virtual functions needed? is it more of a nice thing to have?

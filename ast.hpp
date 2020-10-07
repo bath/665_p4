@@ -106,7 +106,7 @@ private:
 	IDNode * myID;
 };
 
-class IndexNode : public LValNode{
+class IndexNode : public LValNode{ // a[5]; ? a = my base , 5 = myOffset
 public:
 	IndexNode(size_t l, size_t c, IDNode * id, ExpNode * offset)
 	: LValNode(l, c), myBase(id), myOffset(offset){ }
@@ -158,7 +158,7 @@ public:
 	DeclNode(size_t l, size_t c) : StmtNode(l, c){ }
 	void unparse(std::ostream& out, int indent) override = 0;
 	bool nameAnalysis(SymbolTable *symTab) override = 0; // If unparse is override = 0, then so should nameAnalysis
-	virtual NodeType* getTypeNode(); // do i need override = 0? what does it do?
+	virtual TypeNode* getTypeNode();		 // do i need override = 0? what does it do?
 };
 
 class VarDeclNode : public DeclNode{

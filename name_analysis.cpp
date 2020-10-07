@@ -33,18 +33,24 @@ bool ProgramNode::nameAnalysis(SymbolTable * symTab){
 
 bool VarDeclNode::nameAnalysis(SymbolTable *symTab) {
 	bool nameAnalysisOk = false;
-	if (symTab->isInCurrentScopeAlready(this->myID)){ // CCC
+	if( (symTab->isInCurrentScopeAlready(this->ID())) && (!symTab->isCorrectType(this->getTypeNode(), 'v')) ) { // if both errors
 		Report myReport;
-		myReport.fatal(this->myID->line(), this->myID->col(), "More than one declaration of an identifier in a given scope");
+		myReport.fatal(this->ID()->line(), this->ID()->col(), "Bad declaration type (variable or parameter of void type)");
+		myReport.fatal(this->ID()->line(), this->ID()->col(), "More than one declaration of an identifier in a given scope");
+		nameAnalysisOk = false;
+	}
+	else if(symTab->isInCurrentScopeAlready(this->ID())){ // CCC
+		Report myReport;
+		myReport.fatal(this->ID()->line(), this->ID()->col(), "More than one declaration of an identifier in a given scope");
 		nameAnalysisOk = false;
 	}
 	else if(!symTab->isCorrectType(this->getTypeNode(), 'v')) {
 		Report myReport;
-		myReport.fatal(this->myID->line(), this->myID->col(), "Bad declaration type (variable or parameter of void type)");
+		myReport.fatal(this->ID()->line(), this->ID()->col(), "Bad declaration type (variable or parameter of void type)");
 		nameAnalysisOk = false;
 	}
 	else {
-		SemSymbol *s = new SemSymbol('v', this->getTypeNode()->getType());
+		SemSymbol *s = new SemSymbol('v', this->getTypeNode()->getType(), this->ID());
 		symTab->currentScope()->addSymbol(this->ID()->getName(),s);
 		nameAnalysisOk = true;
 	}
@@ -53,6 +59,11 @@ bool VarDeclNode::nameAnalysis(SymbolTable *symTab) {
 
 bool FnDeclNode::nameAnalysis(SymbolTable *symTab){
 	bool nameAnalysisOk = true;
+
+	// is an example of an FnDecl: int a(int b, int c, bool d);
+	// ? 
+	// drew's piazza post implies stmt list?? when does that come into play?
+	// i thought declaration didn't have statement nodes in it.. its just a declaration..
 
 	// NOTE: 
 	// During name analysis, if a function name is multiply declared you should 
@@ -64,25 +75,41 @@ bool FnDeclNode::nameAnalysis(SymbolTable *symTab){
 	// what types of errors can occur from a function declaration?
 		// no return type -- were not concerned about that right now i think?
 		// there is already a function in the current scope named 
+		// what to do about formals and stmt list?
+
+	// errors:
+		// ensure function id doesn't already exist in current scope
+		// ensure formals don't already exist in the current scope
+			// do we call nameanalysis() within this fndeclnode though?
 
 	// we might not need  else stmt bc according to project spec we continue adding to the table??
-	if (symTab->isInCurrentScopeAlready(this->myID)) { // fndecl errors are handled special(PITA). dont fuck w/ rn
-		// already exists
-	}
-	else if(){
-		// can function decl have a bad type? i don't think so
+
+	// id check
+		// 1st check fn name for current scope
+		// 2nd check formaldecls -- do we do that in fndecl? or just in formaldeclnode?
+		// add to current scope if both valid
+		// create new scope for stmts in fn body
+
+	// my main question is when were doing the checks for each thing after, like how does the "walk" through ast work?
+
+	if (symTab->isInCurrentScopeAlready(this->ID())) { // is function id already in scope
+		Report myReport;
+		myReport.fatal(this->ID()->line(), this->ID()->col(), "More than one declaration of an identifier in a given scope");
+		nameAnalysisOk = false;
+
+		// even if this fails, we should still process the formals and body.. right here though? where??
+
 	}
 	else {
-		SemSymbol *s = new SemSymbol(this->myRetType, this->myID);
+		SemSymbol *s = new SemSymbol('f', this->getTypeNode()->getType(), this->ID());
+		symTab->currentScope()->addSymbol(this->ID()->getName(), s);
 		ScopeTable *newScope = new ScopeTable();
 		symTab->addScope(newScope);
-		symTab->
 	}
-	throw new ToDoError("[DELETE ME] I'm an fnDecl."
-		" you should add and make current a new"	
-		" scope table for my body"
-	);
 	return nameAnalysisOk;
 }
 
-}
+bool WhileStmtNode:: 
+
+
+} // end name definitions

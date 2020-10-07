@@ -31,7 +31,7 @@ class SemSymbol {
 			// clay had put in IDNode, do we need this? removing for now
 
 	public: 
-		SemSymbol(char k, string t) : kind(k), type(t){};
+		SemSymbol(char k, string t, IDNode* i) : kind(k), type(t), id(i){};
 		char getKind()
 		{
 			return kind;
@@ -41,6 +41,7 @@ class SemSymbol {
 	private: 
 		char kind;
 		std::string type;
+		IDNode* id;
 };
 
 //A single scope. The symbol table is broken down into a 
