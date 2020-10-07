@@ -123,6 +123,7 @@ public:
 	TypeNode(size_t l, size_t c) : ASTNode(l, c){ }
 	void unparse(std::ostream&, int) override = 0;
 	bool nameAnalysis(SymbolTable * symTab) override;
+	virtual std::string getType(); // do we need override = 0; here?
 };
 
 class CharTypeNode : public TypeNode{
@@ -157,6 +158,7 @@ public:
 	DeclNode(size_t l, size_t c) : StmtNode(l, c){ }
 	void unparse(std::ostream& out, int indent) override = 0;
 	bool nameAnalysis(SymbolTable *symTab) override = 0; // If unparse is override = 0, then so should nameAnalysis
+	virtual NodeType* getTypeNode(); // do i need override = 0? what does it do?
 };
 
 class VarDeclNode : public DeclNode{

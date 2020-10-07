@@ -49,7 +49,7 @@ TypeNode
         2. IntTypeNode
         3. BoolTypeNode
         4. CharTypeNode
-        
+
 
 
 
@@ -57,3 +57,17 @@ Todos:
 1) figure out how to deal with formaldeclnode
 2) check to make sure my error spec is good
 3) figure out the mess that is mysymbol / adding new symbols to the hashmap
+4) will i need to track the scope for each symbol? how are we going to manage that?
+
+In case of errors:
+1) will i need a virtual function for getType() in typenode? since all literal children have getType() ??
+2) when will we be using over ride = 0 and virtual?
+
+Questions:
+1) are virtual functions needed? is it more of a nice thing to have?
+    ex: declnode isn't going to define its own getTypeNode bc it has no typenode member var, so is it really needed to be virtual?
+    when to decide if you should have just child methods vs creating virtual in parents?
+    1.1) what is over ride = 0? are they two things?
+2) when creating a new object and using the constructor and passing in variables, how do the variables get set?
+    2.1) are they automatically mapped to the memeber variables or must we define the constrcutor to map them?
+            i think we have to create the definition to map them

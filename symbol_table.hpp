@@ -22,21 +22,25 @@ class SemSymbol {
 	// each semantic symbol should track
 	// (i.e. the kind of the symbol (either a variable or function)
 	// and functions to get/set those fields
+
+	// what should each symantic symbol track?
+		// probably:
+			// function vs variable
+			// type of id ? int, bool, char, etc?
+			// scope ?!?! -- probably not needed?
+			// clay had put in IDNode, do we need this? removing for now
+
 	public: 
-		SemSymbol(char k, string t, IDNode* i);
+		SemSymbol(char k, string t) : kind(k), type(t){};
 		char getKind()
 		{
 			return kind;
 			// f or v
 		}
-		std::string IdToS()
-		{
-			return id->getName();
-		};
+		std::string getType() { return type; }
 	private: 
 		char kind;
 		std::string type;
-		IDNode* id;
 };
 
 //A single scope. The symbol table is broken down into a 
@@ -50,6 +54,7 @@ class ScopeTable {
 		ScopeTable();
 		bool isInCurrentScopeAlready(IDNode *id);
 		bool isPresent(IDNode *id);
+		void addSymbol(string idName, SemSymbol *s);
 		//TODO: add functions for looking up symbols
 		// and/or returning information to indicate
 		// that the symbol does not exist within the

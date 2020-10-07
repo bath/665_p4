@@ -22,12 +22,6 @@ SymbolTable::SymbolTable(){
 	scopeTableChain = new std::list<ScopeTable *>();
 }
 
-SemSymbol::SemSymbol(char k, string t, IDNode *i){
-	kind = k;
-	type = t;
-	id = i;
-}
-
 // push a new table into the scopeTableChain
 void SymbolTable::addScope(ScopeTable *tab){
 	this->scopeTableChain->push_front(tab);
@@ -108,8 +102,6 @@ bool SymbolTable::isCorrectType(TypeNode *typeNode, char declType) {
 	else {
 		return isCorrectType;
 	}
-
-
 }
 
 bool SymbolTable::isFnWrongType(IDNode *id) { // should there be a version for fn decl and var decl? since var decl can't be void?
@@ -140,9 +132,9 @@ ScopeTable* SymbolTable::currentScope()
 }
 
 // addSymbol will insert a new symbol into the current scope
-void SymbolTable::addSymbol(SemSymbol *s){
+void ScopeTable::addSymbol(string idName, SemSymbol *s){
 	// TODO -- i think this is correct
-	this->currentScope()->symbols->insert(s->IdToS(), s);
+	this->symbols->insert(idName, s);
 }
 
 

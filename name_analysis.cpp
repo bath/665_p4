@@ -31,31 +31,21 @@ bool ProgramNode::nameAnalysis(SymbolTable * symTab){
 	return res;
 }
 
-// check type of functions and varDecls, since you can only have certain types be void for ex.. see project details / errors
 bool VarDeclNode::nameAnalysis(SymbolTable *symTab) {
-	// only two problems may arise with varDecl
-		// 1. name exists in current scope already
-		// 2. wrong type (void a;)
-		// else valid
-	// TODO : not sure this function definition is correct
 	bool nameAnalysisOk = false;
-	// current scope will return the current scope table?
 	if (symTab->isInCurrentScopeAlready(this->myID)){ // CCC
 		Report myReport;
 		myReport.fatal(this->myID->line(), this->myID->col(), "More than one declaration of an identifier in a given scope");
 		nameAnalysisOk = false;
 	}
-	else if(symTab->isCorrectType(this->getTypeNode(), 'v')) {
+	else if(!symTab->isCorrectType(this->getTypeNode(), 'v')) {
 		Report myReport;
 		myReport.fatal(this->myID->line(), this->myID->col(), "Bad declaration type (variable or parameter of void type)");
 		nameAnalysisOk = false;
 	}
 	else {
-			// IDK HOW TO GET A TYPENODE'S TYPE IN STRING? 
-			// like do we call name analysis on the typenode? that doesn't make sense
-			// not sure we should even define anything for the typenode nameanalysis(), let alone call it
-		SemSymbol *s = new SemSymbol("v",this->myType->getType(), this->myID); // check myType, need to return a char currently sending TypeNode
-		symTab->currentScope()->addSymbol(s);
+		SemSymbol *s = new SemSymbol('v', this->getTypeNode()->getType());
+		symTab->currentScope()->addSymbol(this->ID()->getName(),s);
 		nameAnalysisOk = true;
 	}
 	return nameAnalysisOk;
