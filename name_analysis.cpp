@@ -109,7 +109,70 @@ bool FnDeclNode::nameAnalysis(SymbolTable *symTab){
 	return nameAnalysisOk;
 }
 
-bool WhileStmtNode:: 
+bool WhileStmtNode::nameAnalysis(SymbolTable *symTab) {
 
+	// check the cond? ... i dont think so?
+	// check the body? ... yes ... but do we do that in this defn or in stmt node?
+
+}
+
+bool IfStmtNode::nameAnalysis(SymbolTable *symTab) {
+
+	// check the cond? ... i dont think so?
+	// check the body? ... yes ... but do we do that in this defn or in stmt node?
+}
+
+bool ReturnStmtNode::nameAnalysis(SymbolTable *symTab) {
+
+	// how to check myExp?
+
+}
+
+bool StmtNode::nameAnalysis(SymbolTable *symTab) {
+
+}
+
+bool AssignExpNode::nameAnalysis(SymbolTable *symTab) {
+	// check myDst 
+	// check mySrc 
+}
+
+bool LValNode::nameAnalysis(SymbolTable *symTab) {
+
+}
+
+bool FormalDeclNode::nameAnalysis(SymbolTable *symTab) {
+	// here i am assuming even though the private variables aren't defined
+	// in FormalDeclNode, a myType and myID already exist since it is inheriting from
+	// VarDeclNode, which does have them
+
+	bool nameAnalysisOk = false;
+	if ((symTab->isInCurrentScopeAlready(this->ID())) && (!symTab->isCorrectType(this->getTypeNode(), 'v')))
+	{ // if both errors
+		Report myReport;
+		myReport.fatal(this->ID()->line(), this->ID()->col(), "Bad declaration type (variable or parameter of void type)");
+		myReport.fatal(this->ID()->line(), this->ID()->col(), "More than one declaration of an identifier in a given scope");
+		nameAnalysisOk = false;
+	}
+	else if (symTab->isInCurrentScopeAlready(this->ID()))
+	{ // CCC
+		Report myReport;
+		myReport.fatal(this->ID()->line(), this->ID()->col(), "More than one declaration of an identifier in a given scope");
+		nameAnalysisOk = false;
+	}
+	else if (!symTab->isCorrectType(this->getTypeNode(), 'v'))
+	{
+		Report myReport;
+		myReport.fatal(this->ID()->line(), this->ID()->col(), "Bad declaration type (variable or parameter of void type)");
+		nameAnalysisOk = false;
+	}
+	else
+	{
+		SemSymbol *s = new SemSymbol('v', this->getTypeNode()->getType(), this->ID());
+		symTab->currentScope()->addSymbol(this->ID()->getName(), s);
+		nameAnalysisOk = true;
+	}
+	return nameAnalysisOk;
+}
 
 } // end name definitions
