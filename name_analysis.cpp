@@ -243,8 +243,9 @@ bool LessEqNode::nameAnalysis(SymbolTable *symTab)
 	one = this->myExp1->nameAnalysis(symTab);
 	two = this->myExp2->nameAnalysis(symTab);
 	return (one && two);
+}
 
-bool GreaterNode::nameAnalysis(SymbolTable *symTab)
+bool GreaterNode::nameAnalysis(SymbolTable* symTab)
 {
 	bool one, two;
 	one = this->myExp1->nameAnalysis(symTab);
@@ -298,7 +299,10 @@ bool CharTypeNode::nameAnalysis(SymbolTable * symTab)
 	return true;
 }
 
-bool CallStmtNode::nameAnalysis(SymbolTable * symTab) {
+bool CallStmtNode::nameAnalysis(SymbolTable * symTab) { 
+	// this isn't right? we need to verify that the 
+	// use the callexpnode to get the id and ensure that it is already existing, if it is 
+	// then 
 	bool one;
 	one = this->myCallExp->nameAnalysis(symTab);
 	return one;
