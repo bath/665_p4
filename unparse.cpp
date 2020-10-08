@@ -1,5 +1,6 @@
 #include "ast.hpp"
 #include "errors.hpp"
+#include "symbol_table.hpp"
 
 namespace holeyc{
 
@@ -329,7 +330,7 @@ void IDNode::unparse(std::ostream& out, int indent){
 	if (mySymbol)
 	{
 		out << "(";
-		out << mySymbol->myTypeToS(); // (int) OR (int,bool->int) -- MAKE SURE THIS WORKS
+		out << mySymbol->getType(); // (int) OR (int,bool->int) -- MAKE SURE THIS WORKS
 		out << ")";
 	}
 }

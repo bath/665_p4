@@ -32,7 +32,7 @@ class SemSymbol {
 			// clay had put in IDNode, do we need this? removing for now
 
 	public: 
-		SemSymbol(char k, DeclNode* d) : kind(k), declNode(d){};
+		SemSymbol(char k, DeclNode* d) : kind(k), declNode(d){}
 		char getKind()
 		{
 			return kind;
@@ -44,11 +44,14 @@ class SemSymbol {
 			} else { // Is a Fn
 				std::string t = "";
 				int count = 0; 
-				for(auto f : declNode->getFormals()){
+				size_t tSize = declNode->getFormals()->size();
+				int iSize = static_cast<int>(tSize);
+				for(auto f : *declNode->getFormals()){
 					t += f->getTypeNode()->getType();
-					if(count < declNode->getFormals()->size()){
+					if(count < iSize){
 						t += ",";
 					}
+					count++;
 				}
 				t += "->";
 				t += declNode->getTypeNode()->getType();

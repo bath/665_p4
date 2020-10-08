@@ -45,7 +45,7 @@ bool VarDeclNode::nameAnalysis(SymbolTable *symTab) {
 		nameAnalysisOk = false;
 	}
 	else {
-		SemSymbol *s = new SemSymbol('v', this->getTypeNode()->getType(), this->ID());
+		SemSymbol *s = new SemSymbol('v', this);
 		symTab->currentScope()->addSymbol(this->ID()->getName(),s);
 		nameAnalysisOk = true;
 	}
@@ -168,7 +168,6 @@ bool CallExpNode::nameAnalysis(SymbolTable *symTab) {
 }
 
 bool PlusNode::nameAnalysis(SymbolTable *symTab) {
-	bool nameAnalysisIsOk = false;
 	bool one,two;
 	one = this->myExp1->nameAnalysis(symTab);
 	two = this->myExp2->nameAnalysis(symTab);
@@ -177,109 +176,132 @@ bool PlusNode::nameAnalysis(SymbolTable *symTab) {
 
 bool MinusNode::nameAnalysis(SymbolTable *symTab)
 {
-	bool nameAnalysisIsOk = false;
-
-	// this isn't supposed to do anything?
-
-	return nameAnalysisIsOk;
+	bool one, two;
+	one = this->myExp1->nameAnalysis(symTab);
+	two = this->myExp2->nameAnalysis(symTab);
+	return (one && two);
 }
 
 bool TimesNode::nameAnalysis(SymbolTable *symTab)
 {
-	bool nameAnalysisIsOk = false;
-
-	// this isn't supposed to do anything?
-
-	return nameAnalysisIsOk;
+	bool one, two;
+	one = this->myExp1->nameAnalysis(symTab);
+	two = this->myExp2->nameAnalysis(symTab);
+	return (one && two);
 }
 
 bool DivideNode::nameAnalysis(SymbolTable *symTab)
 {
-	bool nameAnalysisIsOk = false;
-
-	// this isn't supposed to do anything?
-
-	return nameAnalysisIsOk;
+	bool one, two;
+	one = this->myExp1->nameAnalysis(symTab);
+	two = this->myExp2->nameAnalysis(symTab);
+	return (one && two);
 }
 
 bool AndNode::nameAnalysis(SymbolTable *symTab)
 {
-	bool nameAnalysisIsOk = false;
-
-	// this isn't supposed to do anything?
-
-	return nameAnalysisIsOk;
+	bool one, two;
+	one = this->myExp1->nameAnalysis(symTab);
+	two = this->myExp2->nameAnalysis(symTab);
+	return (one && two);
 }
 
 bool OrNode::nameAnalysis(SymbolTable *symTab) {
-	bool nameAnalysisIsOk = false;
-
-	// this isn't supposed to do anything?
-
-	return nameAnalysisIsOk;
+	bool one, two;
+	one = this->myExp1->nameAnalysis(symTab);
+	two = this->myExp2->nameAnalysis(symTab);
+	return (one && two);
 }
 
 bool EqualsNode::nameAnalysis(SymbolTable *symTab)
 {
-	bool nameAnalysisIsOk = false;
-
-	// this isn't supposed to do anything?
-
-	return nameAnalysisIsOk;
+	bool one, two;
+	one = this->myExp1->nameAnalysis(symTab);
+	two = this->myExp2->nameAnalysis(symTab);
+	return (one && two);
 }
 
 bool NotEqualsNode::nameAnalysis(SymbolTable *symTab)
 {
-	bool nameAnalysisIsOk = false;
-
-	// this isn't supposed to do anything?
-
-	return nameAnalysisIsOk;
+	bool one, two;
+	one = this->myExp1->nameAnalysis(symTab);
+	two = this->myExp2->nameAnalysis(symTab);
+	return (one && two);
 }
 
 bool LessNode::nameAnalysis(SymbolTable *symTab)
 {
-	bool nameAnalysisIsOk = false;
-
-	// this isn't supposed to do anything?
-
-	return nameAnalysisIsOk;
+	bool one, two;
+	one = this->myExp1->nameAnalysis(symTab);
+	two = this->myExp2->nameAnalysis(symTab);
+	return (one && two);
 }
 
 bool LessEqNode::nameAnalysis(SymbolTable *symTab)
 {
-	bool nameAnalysisIsOk = false;
-
-	// this isn't supposed to do anything?
-
-	return nameAnalysisIsOk;
-}
+	bool one,two;
+	one = this->myExp1->nameAnalysis(symTab);
+	two = this->myExp2->nameAnalysis(symTab);
+	return (one && two);
 
 bool GreaterNode::nameAnalysis(SymbolTable *symTab)
 {
-	bool nameAnalysisIsOk = false;
-
-	// this isn't supposed to do anything?
-
-	return nameAnalysisIsOk;
+	bool one, two;
+	one = this->myExp1->nameAnalysis(symTab);
+	two = this->myExp2->nameAnalysis(symTab);
+	return (one && two);
 }
 
 bool GreaterEqNode::nameAnalysis(SymbolTable *symTab)
 {
-	bool nameAnalysisIsOk = false;
-
-	// this isn't supposed to do anything?
-
-	return nameAnalysisIsOk;
+	bool one, two;
+	one = this->myExp1->nameAnalysis(symTab);
+	two = this->myExp2->nameAnalysis(symTab);
+	return (one && two);
 }
 
-bool UnaryExpNode::nameAnalysis(SymbolTable *symTab)
+bool NegNode::nameAnalysis(SymbolTable * symTab)
 {
-	bool nameAnalysisIsOk = false;
+	bool one;
+	one = this->myExp->nameAnalysis(symTab);
+	return (one);
+}
 
-	nameAnalysisIsOk = this->myExp->nameAnalysis(symTab);
+bool NotNode::nameAnalysis(SymbolTable * symTab)
+{
+	bool one;
+	one = this->myExp->nameAnalysis(symTab);
+	return (one);
+}
 
-	return nameAnalysisIsOk;
+bool VoidTypeNode::nameAnalysis(SymbolTable * symTab) {
+
+	return true;
+
+}
+
+bool IntTypeNode::nameAnalysis(SymbolTable * symTab)
+{
+
+	return true;
+}
+
+bool BoolTypeNode::nameAnalysis(SymbolTable * symTab)
+{
+
+	return true;
+}
+
+bool CharTypeNode::nameAnalysis(SymbolTable * symTab)
+{
+
+	return true;
+}
+
+bool CallStmtNode::nameAnalysis(SymbolTable * symTab) {
+	bool one;
+	one = this->myCallExp->nameAnalysis(symTab);
+	return one;
 }
 
 bool IfStmtNode::nameAnalysis(SymbolTable *symTab) {
@@ -341,9 +363,6 @@ bool FormalDeclNode::nameAnalysis(SymbolTable *symTab) {
 	}
 	return nameAnalysisOk;
 }
-
-bool 
-
 
 } // end name definitions
 

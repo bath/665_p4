@@ -83,7 +83,7 @@ public:
 	bool nameAnalysis(SymbolTable * symTab) override;
 private:
 	std::string name;
-	SemSymbol * mySymbol;
+	SemSymbol* mySymbol;
 };
 
 class RefNode : public LValNode{
@@ -160,7 +160,7 @@ public:
 	virtual bool nameAnalysis(SymbolTable *symTab) override = 0; // If unparse is override = 0, then so should nameAnalysis
 	virtual TypeNode* getTypeNode();		 // do i need override = 0? what does it do?
 	virtual IDNode* ID();
-	virtual 
+	virtual std::list<FormalDeclNode *> * getFormals(); 
 };
 
 class VarDeclNode : public DeclNode{
@@ -171,7 +171,6 @@ public:
 	IDNode *ID() override { return myID; }
 	TypeNode * getTypeNode() override { return myType; }
 	virtual bool nameAnalysis(SymbolTable *) override;
-	virtual std::list<FormalDeclNode *> * getFormals();
 private:
 	TypeNode * myType;
 	IDNode * myID;
@@ -196,7 +195,7 @@ public:
 	  myFormals(formalsIn), myBody(bodyIn){ }
 	IDNode * ID() override { return myID; }
 	TypeNode * getTypeNode() override { return myRetType; }
-	std::list<FormalDeclNode *> * getFormals() const{
+	std::list<FormalDeclNode *> * getFormals() override {
 		return myFormals;
 	}
 	void unparse(std::ostream& out, int indent) override;
@@ -546,7 +545,7 @@ public:
 		unparse(out, 0);
 	}
 	void unparse(std::ostream& out, int indent) override;
-	bool nameAnalysis(SymbolTable * symTab) override;
+	bool nameAnalysis(SymbolTable * symTab) override { return true; }
 private:
 	 const char myVal;
 };

@@ -67,6 +67,7 @@ Todos:
 8) can you declare and/or define functions in functions?
 9) am i supposed to be putting in code somewhere that will actually kick off all nameAnalysis()? -- check where syntax stuff is kicked off, main.cpp?
 10) what is this throw todo error? did clay use that?
+11) i just set void and int type node to return true?
 
 In case of errors:
 1) will i need a virtual function for getType() in typenode? since all literal children have getType() ??
