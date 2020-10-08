@@ -160,12 +160,11 @@ int main(int argc, char * argv[]){
 		if (unparseFile != nullptr){
 			doUnparsing(input, unparseFile);
 		}
-		if (nameFile){
-			holeyc::NameAnalysis * na = doNameAnalysis(input);
-			if (na != nullptr){
-				outputAST(na->ast, nameFile);
-			}
-			std::cout << "Type Analysis Failed\n";
+		holeyc::NameAnalysis * na = doNameAnalysis(input);
+		if (na != nullptr){
+			outputAST(na->ast, nameFile);
+		} else {
+			std::cerr << "Name Analysis Failed"; 
 			return 1;
 		}
 	} catch (holeyc::ToDoError * e){

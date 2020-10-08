@@ -92,13 +92,13 @@ bool FnDeclNode::nameAnalysis(SymbolTable *symTab){
 		myReport.fatal(this->ID()->line(), this->ID()->col(), "More than one declaration of an identifier in a given scope");
 		nameAnalysisOk = false;
 
-		ScopeTable *newScope = new ScopeTable();
-		symTab->addScope(newScope);
-
 		for (auto formals : *myFormals)
 		{
 			nameAnalysisOk = formals->nameAnalysis(symTab);
 		}
+	
+		ScopeTable *newScope = new ScopeTable();
+		symTab->addScope(newScope);
 
 		for (auto body : *myBody)
 		{
@@ -111,9 +111,7 @@ bool FnDeclNode::nameAnalysis(SymbolTable *symTab){
 		SemSymbol *s = new SemSymbol('f', this);
 		symTab->currentScope()->addSymbol(this->ID()->getName(), s);
 
-		// create new scope for formals and body
-		ScopeTable *newScope = new ScopeTable();
-		symTab->addScope(newScope);
+		
 
 		nameAnalysisOk = true;
 
@@ -122,13 +120,17 @@ bool FnDeclNode::nameAnalysis(SymbolTable *symTab){
 			nameAnalysisOk = formals->nameAnalysis(symTab);
 		}
 
+		// create new scope for body
+		ScopeTable *newScope = new ScopeTable();
+		symTab->addScope(newScope);
+
 		for (auto body : *myBody)
 		{
 			nameAnalysisOk = body->nameAnalysis(symTab);
 		}
 
-		symTab->dropScope();
 	}
+	symTab->dropScope();
 	return nameAnalysisOk;
 }
 
@@ -205,14 +207,14 @@ bool ReturnStmtNode::nameAnalysis(SymbolTable *symTab) {
 
 bool CallExpNode::nameAnalysis(SymbolTable *symTab) {
 	bool nameAnalysisIsOk = false;
-
-	nameAnalysisIsOk = this->myID->nameAnalysis(symTab);
+	bool one,two;
+	one = this->myID->nameAnalysis(symTab);
 
 	for(auto args : *myArgs) {
-		nameAnalysisIsOk = args->nameAnalysis(symTab);
+		two = args->nameAnalysis(symTab);
 	}
 
-	return nameAnalysisIsOk;
+	return (one && two);
 }
 
 bool PlusNode::nameAnalysis(SymbolTable *symTab) {
@@ -360,13 +362,12 @@ bool IfStmtNode::nameAnalysis(SymbolTable *symTab) {
 	bool nameAnalysisIsOk = false;
 
 	nameAnalysisIsOk = this->myCond->nameAnalysis(symTab);
-
+	ScopeTable *scope = new ScopeTable();
+	symTab->addScope(scope);
 	for (auto body : *myBody) {
 		nameAnalysisIsOk = body->nameAnalysis(symTab);
 	}
-
-	// check the cond? ... i dont think so?
-	// check the body? ... yes ... but do we do that in this defn or in stmt node?
+	symTab->dropScope();
 	return nameAnalysisIsOk;	
 }
 
@@ -382,13 +383,15 @@ bool AssignExpNode::nameAnalysis(SymbolTable *symTab)
 bool IfElseStmtNode::nameAnalysis(SymbolTable *symTab) {
 	bool one, two, three;
 	one = myCond->nameAnalysis(symTab);
+	ScopeTable *scope = new ScopeTable();
+	symTab->addScope(scope);
 	for(auto btrue : *myBodyTrue) {
 		two = btrue->nameAnalysis(symTab);
 	}
 	for(auto bfalse : * myBodyFalse) {
 		three = bfalse->nameAnalysis(symTab);
 	}
-
+	symTab->dropScope();
 	return (one && two && three);
 }
 
@@ -415,10 +418,6 @@ bool AssignStmtNode::nameAnalysis(SymbolTable *symTab) {
 }
 
 bool FormalDeclNode::nameAnalysis(SymbolTable *symTab) {
-	// here i am assuming even though the private variables aren't defined
-	// in FormalDeclNode, a myType and myID already exist since it is inheriting from
-	// VarDeclNode, which does have them
-
 	bool nameAnalysisOk = false;
 	if ((symTab->isInCurrentScopeAlready(this->ID())) && (!symTab->isCorrectType(this->getTypeNode())))
 	{ // if both errors
