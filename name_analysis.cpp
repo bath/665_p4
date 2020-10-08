@@ -189,7 +189,7 @@ bool WhileStmtNode::nameAnalysis(SymbolTable *symTab) // correct
 	symTab->addScope(scope);
 	for (auto body : *myBody) // the variable's name is myBody for WhileStmtNode -- see line 22 on name_analysis.cpp
 	{
-		two = this->body->nameAnalysis(symTab);
+		two = body->nameAnalysis(symTab);
 	}
 	symTab->dropScope();
 	return (one && two);
@@ -370,12 +370,6 @@ bool IfStmtNode::nameAnalysis(SymbolTable *symTab) {
 	return nameAnalysisIsOk;	
 }
 
-
-bool StmtNode::nameAnalysis(SymbolTable *symTab) {
-	// what do we do in parent nodes?
-	return false;
-}
-
 bool AssignExpNode::nameAnalysis(SymbolTable *symTab)
 {
 	bool one,two;
@@ -383,6 +377,41 @@ bool AssignExpNode::nameAnalysis(SymbolTable *symTab)
 	two = this->mySrc->nameAnalysis(symTab);
 
 	return (one && two);
+}
+
+bool IfElseStmtNode::nameAnalysis(SymbolTable *symTab) {
+	bool one, two, three;
+	one = myCond->nameAnalysis(symTab);
+	for(auto btrue : *myBodyTrue) {
+		two = btrue->nameAnalysis(symTab);
+	}
+	for(auto bfalse : * myBodyFalse) {
+		three = bfalse->nameAnalysis(symTab);
+	}
+
+	return (one && two && three);
+}
+
+bool PostDecStmtNode::nameAnalysis(SymbolTable *symTab) {
+	return myLVal->nameAnalysis(symTab);
+}
+
+bool PostIncStmtNode::nameAnalysis(SymbolTable *symTab) {
+	return myLVal->nameAnalysis(symTab);
+}
+
+bool ToConsoleStmtNode::nameAnalysis(SymbolTable *symTab) {
+	return mySrc->nameAnalysis(symTab);
+
+}
+
+bool FromConsoleStmtNode::nameAnalysis(SymbolTable *symTab) {
+	return myDst->nameAnalysis(symTab);
+
+}
+
+bool AssignStmtNode::nameAnalysis(SymbolTable *symTab) {
+	return myExp->nameAnalysis(symTab);
 }
 
 bool FormalDeclNode::nameAnalysis(SymbolTable *symTab) {
