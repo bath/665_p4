@@ -557,7 +557,7 @@ public:
 		unparse(out, 0);
 	}
 	void unparse(std::ostream& out, int indent) override;
-	bool nameAnalysis(SymbolTable * symTab) override;
+	bool nameAnalysis(SymbolTable *symTab) override { return true; }
 };
 
 class TrueNode : public ExpNode{
@@ -567,7 +567,7 @@ public:
 		unparse(out, 0);
 	}
 	void unparse(std::ostream& out, int indent) override;
-	bool nameAnalysis(SymbolTable * symTab) override;
+	bool nameAnalysis(SymbolTable *symTab) override { return true; }
 };
 
 class FalseNode : public ExpNode{
@@ -577,7 +577,7 @@ public:
 		unparse(out, 0);
 	}
 	void unparse(std::ostream& out, int indent) override;
-	bool nameAnalysis(SymbolTable * symTab) override;
+	bool nameAnalysis(SymbolTable *symTab) override { return true; }
 };
 
 class CallStmtNode : public StmtNode{
@@ -585,7 +585,7 @@ public:
 	CallStmtNode(size_t l, size_t c, CallExpNode * expIn)
 	: StmtNode(l, c), myCallExp(expIn){ }
 	void unparse(std::ostream& out, int indent) override;
-	bool nameAnalysis(SymbolTable * symTab) override;
+	bool nameAnalysis(SymbolTable * symTab) override 
 private:
 	CallExpNode * myCallExp;
 };

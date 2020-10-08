@@ -132,19 +132,67 @@ bool FnDeclNode::nameAnalysis(SymbolTable *symTab){
 	return nameAnalysisOk;
 }
 
-bool WhileStmtNode::nameAnalysis(SymbolTable *symTab) {
-	bool one,two;
-	one = this->myCond->nameAnalysis(symTab);
-	for(auto body : *myBody) {
-		two = body->nameAnalysis(symTab);
+bool IDNode::nameAnalysis(SymbolTable *symTab) { // make sure this is right
+	if(symTab->lookUp(this)) {
+		return true;
 	}
+	else {
+		Report myReport;
+		myReport.fatal(line(), col(), "Use of an undeclared identifier");
+		return false;
+	}
+}
 
-	// entering a new scope with our while statement
-	ScopeTable *newScope = new ScopeTable();
-	symTab->addScope(newScope);
+bool RefNode::nameAnalysis(SymbolTable *symTab) {
+	if (myID->nameAnalysis(symTab))
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool DerefNode::nameAnalysis(SymbolTable *symTab)
+{
+	if (myID->nameAnalysis(symTab))
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+
+bool IndexNode::nameAnalysis(SymbolTable *symTab)
+{
+	if ((myBase->nameAnalysis(symTab)) && (myOffset->nameAnalysis(symTab)))
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+
+
+bool WhileStmtNode::nameAnalysis(SymbolTable *symTab) // correct
+{
+	bool one, two;
+	one = this->myCond->nameAnalysis(symTab);
+	ScopeTable *scope = new ScopeTable();
+	symTab->addScope(scope);
+	for (auto body : *myBody) // the variable's name is myBody for WhileStmtNode -- see line 22 on name_analysis.cpp
+	{
+		two = this->body->nameAnalysis(symTab);
+	}
 	symTab->dropScope();
 	return (one && two);
-
 }
 
 bool ReturnStmtNode::nameAnalysis(SymbolTable *symTab) {
